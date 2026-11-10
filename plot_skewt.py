@@ -33,7 +33,7 @@ def moist_lapse(temp, pres):
 plines = np.arange(100, 1000, 100)
 Tlines = np.arange(-100, 100, 10)
 pmin, pmax = 100, 1000
-Tmin, Tmax = -40, 50
+Tmin, Tmax = -40, 100
 epsilon = 0.622
 g = 9.8 #m/s^2
 cp = 1004 #J/kgK
@@ -47,7 +47,8 @@ moist_extra = np.arange(5,55,10) + 273.15
 pres = np.arange(100,1001,1)
 hPa_p = np.flip(pres)
 
-def plot_skewt(sounding_t, sounding_td, sounding_p):
+def plot_skewt(sounding_t, sounding_td, sounding_p, lines):
+
     #Plot the skew T
     fig, ax = plt.subplots()
     label = 1
@@ -98,14 +99,18 @@ def plot_skewt(sounding_t, sounding_td, sounding_p):
             ax.plot(Skew(temps, hPa_p), hPa_p, color='blue', linewidth=.5)
 
     #Plot observed sounding lines
-    ax.plot(Skew(sounding_t, sounding_p), sounding_p, color='red', label = 'Temperature Profile')
-    #ax.plot(Skew(sounding_td, sounding_p), sounding_p, color='green', label = 'Dew Point Profile')
+    for i in range(lines):
+        t_in = sounding_t[i]
+        td_in = sounding_td[i]
+        p_in = sounding_p[i]
+        ax.plot(Skew(t_in, p_in), p_in, color='red', label = 'Temperature Profile')
+        #ax.plot(Skew(td_in, p_in), p_in, color='green', label = 'Dew Point Profile')
 
     #Add a title, labels, and a legend
     #ax.set_title('Norman, OK May 13, 2026 00z Sounding')
     ax.set_xlabel('Temperature (C)')
     ax.set_ylabel('Pressure (hPa)')
-    ax.legend()
+    ax.legend(loc='upper right')
 
     #Make the y-axis not show scientific notation (Thank you ChatGPT)
     ax.yaxis.set_major_locator(ticker.LogLocator(base=10, subs=(1, 2, 3, 4, 5, 6, 7, 8, 9)))
